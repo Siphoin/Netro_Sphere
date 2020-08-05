@@ -14,6 +14,8 @@ public class Sphere : MonoBehaviour
     /// for clamp (argument max)
     /// </summary>
     const float width_screen = 4.07f;
+
+    const string enemyTag = "Enemy";
     /// <summary>
     /// for clamp (argument min)
     /// </summary>
@@ -23,7 +25,10 @@ public class Sphere : MonoBehaviour
     /// </summary>
     private Rigidbody rigidbody;
 
-    private Vector3 forceJump = new Vector3(0, 4.4f, 0);
+    private Vector3 forceJump = new Vector3(0, 4.8f, 0);
+
+    public float Speed { get => speed; }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,7 +55,7 @@ public class Sphere : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Jump();
+            Jump(forceJump);
         }
     }
 
@@ -69,12 +74,32 @@ public class Sphere : MonoBehaviour
     }
 
 
-    private void Jump ()
+    public void Jump (Vector3 force)
     {
         if (rigidbody.velocity.y == 0)
         {
-        rigidbody.AddForce(forceJump, ForceMode.Impulse);
+        rigidbody.AddForce(force, ForceMode.Impulse);
         }
 
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == enemyTag)
+        {
+            // TODO: game over
+            Debug.Log(32343);
+        }
+
+        if (collision.gameObject.tag == "Money")
+        {
+            collision.gameObject.GetComponent<Monetka>().DestrotyMonetka();
+        }
+
+        if (collision.gameObject.tag == "Batut")
+        {
+            Debug.Log(32343);
+            rigidbody.AddForce(forceJump * 1.29f, ForceMode.Impulse);
+        }
     }
 }

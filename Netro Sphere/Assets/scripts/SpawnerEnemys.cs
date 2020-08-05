@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SpawnerEnemys : MonoBehaviour
 {
-    const string pathEnemysPrefabs = "Prefabs";
+    const string pathEnemysPrefabs = "PrefabsEnemys";
     private GameObject[] arrayPrefabs = new GameObject[0];
     const float width_screen = 4.07f;
     const float startPoint = 34.9f;
