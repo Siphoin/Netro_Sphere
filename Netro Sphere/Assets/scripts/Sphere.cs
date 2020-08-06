@@ -10,6 +10,11 @@ public class Sphere : MonoBehaviour
     /// speed rotation and move
     /// </summary>
     [SerializeField] private float speed;
+
+    [SerializeField] AudioSource audioSource;
+
+    [SerializeField] AudioSource audioSource2;
+
     /// <summary>
     /// for clamp (argument max)
     /// </summary>
@@ -20,6 +25,8 @@ public class Sphere : MonoBehaviour
     /// for clamp (argument min)
     /// </summary>
     float width_screen_min = 0;
+    private GameManager gameManager;
+
     /// <summary>
     /// rightbody for jump
     /// </summary>
@@ -32,6 +39,7 @@ public class Sphere : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gameManager = Camera.main.GetComponent<GameManager>();
         rigidbody = GetComponent<Rigidbody>();
         // set min argument clamp 
         width_screen_min = width_screen * -1;
@@ -57,6 +65,31 @@ public class Sphere : MonoBehaviour
         {
             Jump(forceJump);
         }
+
+        if (Input.touchCount == 1)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Moved)
+            {
+                Vector3 pos = Input.GetTouch(0).position;
+                pos.z = 8;
+                Vector3 realWorldPos = Camera.main.ScreenToWorldPoint(pos);
+                if (realWorldPos.x < 0)
+                {
+                    Moving(transform.right * -1);
+                }
+
+                else
+                {
+                    Moving(transform.right);
+                }
+            }
+
+            if (touch.phase == TouchPhase.Began)
+            {
+                Jump(forceJump);
+            }
+        }
     }
 
     private void Moving(Vector3 dir)
@@ -79,6 +112,7 @@ public class Sphere : MonoBehaviour
         if (rigidbody.velocity.y == 0)
         {
         rigidbody.AddForce(force, ForceMode.Impulse);
+            audioSource2.Play();
         }
 
     }
@@ -88,18 +122,27 @@ public class Sphere : MonoBehaviour
         if (collision.gameObject.tag == enemyTag)
         {
             // TODO: game over
-            Debug.Log(32343);
+         if (gameManager.health > 0)
+            {
+                gameManager.health--;
+            }
         }
 
         if (collision.gameObject.tag == "Money")
         {
-            collision.gameObject.GetComponent<Monetka>().DestrotyMonetka();
+            collision.gameObject.GetComponent<Monetka>().DestroyMonetka();
+        }
+
+        if (collision.gameObject.tag == "Kit")
+        {
+           collision.gameObject.GetComponent<Kit>().Regeneration();
         }
 
         if (collision.gameObject.tag == "Batut")
         {
-            Debug.Log(32343);
+            audioSource.Play();
             rigidbody.AddForce(forceJump * 1.29f, ForceMode.Impulse);
+
         }
     }
 }

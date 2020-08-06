@@ -5,6 +5,7 @@ public class Monetka : DynamicObject
 {
     [SerializeField] float angleSpeed;
     [SerializeField] float moveSpeed;
+    [SerializeField] AudioSource audioSource;
     private GameManager gameManager;
 
     // Use this for initialization
@@ -25,13 +26,16 @@ public class Monetka : DynamicObject
     }
 
 
-    public void DestrotyMonetka()
+    public void DestroyMonetka()
     {
         GameObject effectDestroy = Instantiate(Resources.Load<GameObject>("Prefabs/effect_money"));
         var pos = transform.position;
         pos.y += 2;
         effectDestroy.transform.position = pos;
         gameManager.money++;
+        audioSource.Play();
+        audioSource.transform.SetParent(null);
+        audioSource.gameObject.AddComponent<TimerLive>().Time = 0.5f;
         Destroy(gameObject);
     }
 }

@@ -13,13 +13,23 @@ public class GameManager : MonoBehaviour
     private int Money = 0;
     public float km { get => (float)Math.Round(kmTotal, 2); }
     public int money { get => Money; set => Money = value; }
+    public bool Status { get => status; }
+    public int health { get => healthCount; set => healthCount = value; }
 
+    bool status = true;
+
+    private int healthCount = 3;
+
+    public string TimePlay { get => string.Format("{00:00}", timer_gameplay.Minute) + ":" + string.Format("{00:00}", timer_gameplay.Second); }
+
+    DateTime timer_gameplay = new DateTime();
     // Use this for initialization
     void Start()
     {
         sphere = GameObject.FindGameObjectWithTag("Player").GetComponent<Sphere>();
         SetCurrentTimeScale();
         StartCoroutine(NewSpeedGame());
+        StartCoroutine(TimePlayTick());
     }
 
     private void SetCurrentTimeScale()
@@ -51,6 +61,33 @@ public class GameManager : MonoBehaviour
 
 
             
+        }
+    }
+
+    IEnumerator TimePlayTick()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1);
+            timer_gameplay = timer_gameplay.AddSeconds(1);
+
+
+        }
+    }
+
+
+
+    public void SetStatusGame ()
+    {
+        status = !status;
+        if (status)
+        {
+            Time.timeScale = currentTimeScale;
+        }
+
+        else
+        {
+            Time.timeScale = 0;
         }
     }
 }

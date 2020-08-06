@@ -21,7 +21,7 @@ public class SpawnerBatuts : MonoBehaviour
     {
         while (true)
         {
-            float time = Random.Range(3, 6);
+            float time = Random.Range(3, 20);
             yield return new WaitForSeconds(time);
             GameObject batut = Instantiate(Resources.Load<GameObject>("Prefabs/Batut"));
             Vector3 vec = new Vector3(Random.Range(width_screen * -1, width_screen), 0, startPoint);
