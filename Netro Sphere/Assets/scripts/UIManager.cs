@@ -5,7 +5,9 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] Text text_km_total;
+    [SerializeField] Text text_km_record;
     [SerializeField] Text text_money;
+    [SerializeField] Text text_money_record;
     [SerializeField] Text text_time_gameplay;
     [SerializeField] Sprite sprite_resume_b;
     [SerializeField] Sprite sprite_pause_b;
@@ -24,6 +26,26 @@ public class UIManager : MonoBehaviour
         gameManager = Camera.main.GetComponent<GameManager>();
         health_old = gameManager.health;
         StartCoroutine(RefreshHealthStatus());
+
+        if (gameManager.Record_km > 0)
+        {
+            text_km_record.text = "Record km: " + gameManager.Record_km;
+        }
+
+        else
+        {
+            text_km_record.text = "";
+        }
+
+        if (gameManager.Record_score > 0)
+        {
+           text_money_record.text = "Record: " + gameManager.Record_score;
+        }
+
+        else
+        {
+            Destroy(text_money_record.transform.parent.gameObject);
+        }
     }
 
     // Update is called once per frame
@@ -60,6 +82,8 @@ public class UIManager : MonoBehaviour
             Instantiate(Resources.Load<GameObject>("Prefabs/GameOver"));
             Destroy(gameObject);
         }
+
+        
     }
 
     public void SetTimeState ()
@@ -84,6 +108,12 @@ public class UIManager : MonoBehaviour
                 healths[i].sprite = health_full_sprite;
             }
         }
+    }
+
+    public  MusicPlayerWidget SetupMusicPlayerWidget ()
+    {
+        MusicPlayerWidget widget = Instantiate(Resources.Load<GameObject>("Prefabs/widgetMusicPlayer"), this.transform).GetComponent<MusicPlayerWidget>();
+        return widget;
     }
 
     
